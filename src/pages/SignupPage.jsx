@@ -1,6 +1,6 @@
-import FormLogo from "@/components/structure/formLogo";
+import FormLogo from "@/components/structure/FormLogo";
 import FormPattern from "@/components/structure/FormPattern";
-import { Flex, Heading, Text } from "@chakra-ui/react";
+import { Flex,  Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { motion as Motion } from "framer-motion";
 import NameEmailStep from "@/components/structure/NameEmailStep";
