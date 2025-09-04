@@ -1,0 +1,17 @@
+newFriendReq ------ friend request socket 
+
+
+
+scoket.io listeners for frontend
+
+onlineFriendList - for getting all friends once a user connects to socket
+friendIsOnline - getting a new friend active once a friend connects to socket
+userDisconnect - whenever a user disconnect or loses connection event triggers and frontend updates
+newFriendReq  - whenever a user receives a new friend req the frontend will listen for the request
+redrawReq   ---- for removing of a request when the sender deletes it 
+reqAccepted --- whenever a sent request is accepted the friend details is sent back to both and ui updates
+newMessage --- whenever a user gets a message from the socket
+newStatus ---- whenever a user gets a status
+
+
+activeBar width is 33%

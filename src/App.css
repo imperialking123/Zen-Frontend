@@ -1,0 +1,242 @@
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.75;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+a {
+  font-weight: bold;
+}
+
+.blockToCircle {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.iconshift {
+  margin-left: 8px !important;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+.shiftbtn {
+  margin-right: 8px !important;
+}
+
+.iconMedium {
+  transform: scale(1.5) !important;
+}
+
+.iconSmall {
+  transform: scale(1.3) !important;
+}
+
+.textHover:hover {
+  font-weight: bold;
+}
+
+/* .sidebar {
+  background: linear-gradient(rgba(55, 52, 56, 0.5), rgba(55, 52, 56, 0.7));
+  backdrop-filter: blur(10px);
+} */
+
+@keyframes recording {
+  0% {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0.5);
+  }
+  100% {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  20% {
+    transform: translateX(calc(-50% - 5px));
+  }
+  40% {
+    transform: translateX(calc(-50% + 5px));
+  }
+  60% {
+    transform: translateX(calc(-50% - 5px));
+  }
+  80% {
+    transform: translateX(calc(-50% + 5px));
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.shake {
+  animation: shake 0.2s infinite ease-in-out;
+}
+
+.navLink {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+  border-radius: 7px;
+  transition: 0.5s ease;
+  outline: none;
+  border: none;
+}
+
+.navLink:focus {
+  outline: none;
+  border: none;
+}
+
+.navLink:hover {
+  background-color: #1d1d1f;
+}
+
+.navLink.active {
+  background-color: #1d1d1f;
+}
+
+.navLink .iconScale {
+  scale: 1.5;
+}
+
+.searchShift {
+  scale: 1.5;
+  margin-right: 10px !important;
+}
+
+.FrRendered {
+  background: #333338;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 7px;
+}
+
+.scaleerror {
+  scale: 5;
+}
+
+.addBtn {
+  width: 35px;
+  height: 35px;
+  padding: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  user-select: none;
+  outline: none;
+  border: none;
+}
+
+.addBtnd:focus {
+  outline: none;
+  border: none;
+}
+
+.addBtn svg {
+  scale: 1.2;
+}
+
+.upload-ring {
+  position: absolute;
+  animation: spin 1.5s linear infinite; /* rotate continuously */
+  transform-origin: center center;
+}
+
+.statusRing {
+  position: absolute;
+  stroke: #38a169;
+  transform-origin: center center;
+  stroke-width: 3px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinGear {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+::-webkit-scrollbar {
+  background: transparent;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  margin-block: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #333338;
+  border-radius: 10px;
+}
+
+progress {
+  width: 100%;
+  height: 5px;
+  border-radius: 10px;
+  overflow: hidden;
+  appearance: none;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #464646;
+  border-radius: 10px;
+}
+
+progress::-webkit-progress-value {
+  background-color: #e4dbdb; /* green */
+  border-radius: 10px;
+}
+
+/* Firefox */
+progress::-moz-progress-bar {
+  background-color: #4ade80;
+  border-radius: 10px;
+}
