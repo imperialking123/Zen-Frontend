@@ -22,8 +22,8 @@ const DisplayUser = ({ profileData }) => {
       </Box>
 
       <Box
-        w="100px"
-        h="100px"
+        w="90px"
+        h="90px"
         rounded="full"
         display="flex"
         alignItems="center"
@@ -31,7 +31,7 @@ const DisplayUser = ({ profileData }) => {
         bg="gray.800"
         pos="absolute"
         left="10%"
-        top="10%"
+        top="7%"
       >
         <Image
           src={profileData?.profile?.profilePic || replacerImage}
@@ -45,7 +45,7 @@ const DisplayUser = ({ profileData }) => {
         onlineFriends.includes(profileData?._id) ? (
           <Box
             pos="absolute"
-            bottom="10%"
+            bottom="12%"
             right="10%"
             p="5px"
             border="5px solid"

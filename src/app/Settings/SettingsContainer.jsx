@@ -85,17 +85,19 @@ const SettingsContainer = () => {
           w="full"
           bg="gray.900"
           position="relative"
+
         >
-          <Flex w="full" flexGrow={1}>
+          <Flex  mdDown={{direction: "column"}}  w="full" flexGrow={1}>
             <Flex
               alignItems="flex-end"
               gap="5px"
               p="10px"
               direction="column"
               w="30%"
+              mdDown={{w: "100%"}}
             >
               <Text mt="10px" w="70%" fontSize="16px" color="gray.400">
-                User Settings
+                User Settings 
               </Text>
               {renderSettings.map((set, index) => (
                 <Button

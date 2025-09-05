@@ -42,6 +42,7 @@ const MessengerContainer = () => {
       getMessages(convoSelected._id);
     }
   }, [convoSelected]);
+  
 
   return (
     <Flex direction="column" w="100%" h="100%">

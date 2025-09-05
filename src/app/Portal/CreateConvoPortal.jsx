@@ -11,16 +11,24 @@ import { useNavigate } from "react-router-dom";
 const CreateConvoPortal = () => {
   const { friends, onlineFriends } = userFriendStore();
   const { setShowAddconvo, SetSliderNum, setTopText } = userPopStore();
-  const { createConvo } = userChatStore();
+  const { handleDirect, continueDirect } = userChatStore();
 
   const navigate = useNavigate();
 
-  const handleClick = async (username) => {
-    await createConvo(username);
-    setShowAddconvo(null);
-    SetSliderNum(2);
-    setTopText("Direct Messages");
-    navigate(`@me/${username}`);
+  const handleClick = async (user) => {
+    const response = handleDirect(user);
+    if (response === "Available") {
+      setShowAddconvo(false);
+      SetSliderNum(2);
+      setTopText("Direct Messages");
+      navigate(`@me/${user.username}`);
+    } else {
+      setShowAddconvo(false);
+      SetSliderNum(2);
+      setTopText("Direct Messages");
+      navigate(`@me/${user.username}`);
+      continueDirect(response);
+    }
   };
 
   return (
@@ -95,7 +103,7 @@ const CreateConvoPortal = () => {
                   w="full"
                   alignItems="center"
                   key={friend._id}
-                  onClick={() => handleClick(friend.username)}
+                  onClick={() => handleClick(friend)}
                 >
                   <Box
                     display="flex"

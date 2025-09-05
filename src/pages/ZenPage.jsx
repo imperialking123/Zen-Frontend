@@ -125,6 +125,7 @@ const ZenPage = () => {
     };
   }, []);
 
+  
   return (
     <Flex draggable={false} direction="column" bg="gray.950" w="100%" h="100vh">
       {/*Title Bar */}

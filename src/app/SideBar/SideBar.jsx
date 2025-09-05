@@ -16,7 +16,7 @@ const SideBar = () => {
   const Navlinks = [
     {
       text: "Friends",
-      to: "/zen",
+      to: "/",
       icon: <MdOutlineEmojiPeople className="iconScale" />,
       function: () => {
         selectConvo(null);

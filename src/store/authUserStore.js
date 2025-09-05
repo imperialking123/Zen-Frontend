@@ -128,7 +128,9 @@ const authUserStore = create((set, get) => ({
       get().connectSocket();
       get().checkAuth();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Bad internet connection");
+      setTimeout(() => {
+        toast.error(error.response?.data?.message || "Bad internet connection");
+      }, 100);
     } finally {
       set({ isLogingIn: false });
     }

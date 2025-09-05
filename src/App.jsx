@@ -61,36 +61,33 @@ const App = () => {
     <div>
       <Toaster closeButton richColors position="top-center" />
       <Routes>
-        <Route
-          path="/"
-          element={authUser ? <Navigate to="/zen" /> : <WelcomePage />}
-        />
+    
         <Route
           path="/signup"
-          element={authUser ? <Navigate to="/zen" /> : <SignupPage />}
+          element={authUser ? <Navigate to="/" /> : <SignupPage />}
         />
 
         {/*Important Route */}
 
         <Route
-          path="/zen"
+          path="/"
           element={authUser ? <ZenPage /> : <Navigate to="/signup" />}
         >
           <Route index element={<FriendContainer />} />
           <Route path="hyperzen" element={<HyperZenContainer />} />
           <Route path="@me/:username" element={<MessengerContainer />} />
-        </Route>
+        </Route>  
 
         {/*Important Route */}
 
         <Route
           path="/google"
-          element={authUser ? <Navigate to="/zen" /> : <GooglePage />}
+          element={authUser ? <Navigate to="/" /> : <GooglePage />}
         />
 
         <Route
           path="/login"
-          element={authUser ? <Navigate to="/zen" /> : <LoginPage />}
+          element={authUser ? <Navigate to="/" /> : <LoginPage />}
         />
       </Routes>
     </div>

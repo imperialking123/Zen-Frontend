@@ -144,6 +144,36 @@ const userChatStore = create((set, get) => ({
   socketNewConversation: (data) => {
     set({ conversations: [data, ...get().conversations] });
   },
+
+  isGettingConvo: false,
+  handleDirect: (user) => {
+    const conversations = get().conversations;
+
+    const isConvoAvailable = conversations.filter(
+      (convo) => convo.otherParticipant._id === user._id
+    );
+
+    if (isConvoAvailable.length > 0) {
+      set({ convoSelected: isConvoAvailable[0] });
+
+      return "Available";
+    } else {
+      const tempConvo = {
+        _id: crypto.randomUUID(),
+        participants: [authUserStore.getState().authUser, user],
+        otherParticipant: user,
+        isTemp: true,
+      };
+
+      set({ convoSelected: tempConvo, isGettingConvo: true });
+
+      return tempConvo;
+    }
+  },
+
+  continueDirect: (convo) => {
+    console.log(convo);
+  },
 }));
 
 export default userChatStore;
