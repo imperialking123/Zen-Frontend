@@ -1,12 +1,15 @@
 import authUserStore from "@/store/authUserStore";
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Flex, Image, Text } from "@chakra-ui/react";
 import replacerImage from "@/assets/default.jpg";
 import userChatStore from "@/store/userChatStore";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useState } from "react";
+import RenderTextEmoji from "@/config/RenderTextEmoji";
 
 dayjs.extend(calendar);
+dayjs.extend(localizedFormat);
 
 const MapText = ({ data }) => {
   const { authUser } = authUserStore();
@@ -14,80 +17,87 @@ const MapText = ({ data }) => {
   const isMe = data.senderId === authUser._id;
 
   const [isHovered, setIsHovered] = useState(false);
-  const formatMessageTime = (date) => {
+  function formatTime(date) {
+    const now = dayjs();
     const d = dayjs(date);
-    return d.isSame(dayjs(), "day")
-      ? d.format("h:mm A") // same day → just time
-      : d.format("M/D/YYYY"); // different day → date only
-  };
+
+    if (d.isSame(now, "day")) {
+      return d.format("h:mm A"); // same day → show time
+    } else {
+      return d.format("M/D/YYYY"); // different day → show date
+    }
+  }
+
+  function formatChatTimeStamp(date) {
+    const d = dayjs(date);
+    const now = dayjs();
+
+    if (d.isSame(now, "day")) {
+      return d.format("h:mm A"); // Today
+    } else if (d.isSame(now.subtract(1, "day"), "day")) {
+      return `Yesterday at ${d.format("h:mm A")}`;
+    } else if (d.isSame(now, "year")) {
+      return d.format("MMM D"); // Mar 5
+    } else {
+      return d.format("MMM D, YYYY"); // Mar 5, 2001
+    }
+  }
 
   return (
     <Flex
-      mt={data.showAvatar ? "6px" : "0px"}
-      mb={data.showAvatar ? "6px" : "0px"}
+      mt={data.showAvatar === true ? "8px" : "0px"}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       alignItems="flex-start"
-      gap="10px"
-      _hover={{ bg: "gray.600" }}
-      w="full"
-      overflowWrap="break-word"
-      wordWrap="break-word"
-      wordBreak="break-all"
-      p="0px 5px"
+      _hover={{ bg: "gray.800" }}
+      w="99%"
       rounded="2px"
       maxW="100%"
     >
-      {data.showAvatar === true && (
-      
+      {/*Avatar and timer when avatar show off */}
+      <Flex justifyContent="center" maxW="72px" minW="72px" p="5px">
+        {data.showAvatar === true ? (
           <Image
-            rounded="full"
             w="40px"
             h="40px"
-            mt='5px'
+            rounded="full"
             src={
-              isMe === true
-                ? authUser?.profile?.profilePicsm || replacerImage
-                : convoSelected.otherParticipant?.profile?.profilePicsm ||
+              isMe
+                ? authUser.profile.profilePicsm || replacerImage
+                : convoSelected.otherParticipant.profile.profilePicsm ||
                   replacerImage
             }
           />
-    
-      )}
+        ) : (
+          <Text
+            userSelect="none"
+            fontWeight="600"
+            color="gray.400"
+            fontSize="11px"
+            opacity={isHovered ? "1" : "0"}
+          >
+            {formatTime(data?.createdAt)}
+          </Text>
+        )}
+      </Flex>
+      {/*Avatar and timer when avatar show off */}
 
-      {data.showAvatar === true && (
-        <Flex p="0px" gap="0px" direction="column">
-          <Flex gap="5px" alignItems="center">
-            <Text fontSize="15px">
-              {isMe === true
-                ? authUser?.name
-                : convoSelected?.otherParticipant?.name}
-            </Text>{" "}
-            <Text color="gray.400" fontSize="12px">
-              {dayjs(data.createdAt).calendar()}
+      {/*Name and text  */}
+      <Flex direction="column" w="calc(100% - 72px)">
+        {data.showAvatar && (
+          <Flex alignItems="center" gap="5px">
+            <Text cursor="pointer" fontSize="16px">
+              {isMe ? authUser.name : convoSelected.otherParticipant.name}
+            </Text>
+            <Text fontWeight="600" color="gray.400" fontSize="13px">
+              {formatChatTimeStamp(data.createdAt)}
             </Text>
           </Flex>
-          <Text>{data.text}</Text>
-        </Flex>
-      )}
-
-      {data.showAvatar === false && (
-        <>
-          <Text
-            opacity={isHovered ? "1" : "0" }
-            color="gray.400"
-            w="40px"
-            alignSelf='center'
-            display='flex'
-            alignItems='center'
-            fontSize="10px"
-            
-          >
-            {formatMessageTime(data?.createdAt)}
-          </Text>
-          <Text w="calc(100% - 35px)">{data.text}</Text>
-        </>
-      )}
+        )}
+        <RenderTextEmoji fontSize="16px" >
+          {data.text}
+        </RenderTextEmoji>
+      </Flex>
     </Flex>
   );
 };

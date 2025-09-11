@@ -35,14 +35,12 @@ const MessengerContainer = () => {
   }, []);
 
   useEffect(() => {
-    if (convoSelected?.isTemp) {
-      return;
-    }
-    if (convoSelected) {
-      getMessages(convoSelected._id);
-    }
+    if (!convoSelected) return;
+    if (convoSelected.isTemp) return;
+    if (!convoSelected._id) return;
+
+    getMessages(convoSelected._id);
   }, [convoSelected]);
-  
 
   return (
     <Flex direction="column" w="100%" h="100%">

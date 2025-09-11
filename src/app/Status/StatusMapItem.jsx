@@ -37,7 +37,7 @@ const StatusMapItem = ({ person, status }) => {
           fill="transparent"
           strokeWidth="3"
           strokeLinecap="round"
-          strokeDasharray={dashArray}
+          strokeDasharray={status.length > 1 ? dashArray : ""}
         />
       </svg>
     </Flex>

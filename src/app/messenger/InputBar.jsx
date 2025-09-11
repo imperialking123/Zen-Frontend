@@ -10,26 +10,32 @@ import { MdDelete } from "react-icons/md";
 
 const InputBar = ({ data }) => {
   const { authUser } = authUserStore();
-  const { sendMessage, convoSelected } = userChatStore();
+  const { sendMessage, convoSelected, isGettingConvo, isFetchingMessage } =
+    userChatStore();
   const [inputTextValue, setInputTextValue] = useState({
     text: "",
     type: "text-msg",
-    senderId: authUser?._id,
-    receiverId: data?._id,
-    convoId: convoSelected._id,
-    isTemp: convoSelected?.isTemp || false,
   });
 
   const uploadRef = useRef(null);
   const textAreaRef = useRef(null);
 
   const handleKeyDown = (event) => {
+    if (isGettingConvo || isFetchingMessage) return;
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       if (!inputTextValue.text && !inputTextValue.image) {
         return;
       }
-      sendMessage(inputTextValue);
+
+      const message = {
+        ...inputTextValue,
+        senderId: authUser?._id,
+        receiverId: data?._id,
+        convoId: convoSelected._id,
+        isTemp: convoSelected?.isTemp || false,
+      };
+      sendMessage(message);
 
       setInputTextValue((prev) => ({
         ...prev,
@@ -41,18 +47,26 @@ const InputBar = ({ data }) => {
   };
 
   const handleSendBtn = () => {
+    if (isGettingConvo || isFetchingMessage) return;
     if (!inputTextValue.text && !inputTextValue.image) {
       return;
     }
-    sendMessage(inputTextValue);
-    setInputTextValue((prev) => {
-      const { image, ...restOfState } = prev;
-      return {
-        ...restOfState,
-        text: "",
-        type: "text-msg",
-      };
-    });
+
+    const message = {
+      ...inputTextValue,
+      senderId: authUser?._id,
+      receiverId: data?._id,
+      convoId: convoSelected._id,
+      isTemp: convoSelected?.isTemp || false,
+    };
+    sendMessage(message);
+
+    setInputTextValue((prev) => ({
+      ...prev,
+      text: "",
+      image: "",
+      type: "text-msg",
+    }));
   };
 
   const handleImageInput = async (e) => {
@@ -61,8 +75,8 @@ const InputBar = ({ data }) => {
       file.type.startsWith("image/") ||
       /\.(jpg|jpeg|png|gif|webp)$/i.test(file.name);
     if (!isImage) return;
-    const resized = await imageResizer(file, 1024, 1024, "JPEG", 0.8);
-    
+    const resized = await imageResizer(file, 1280, 1280, "WEBP", 0.8);
+
     setInputTextValue((prev) => ({
       ...prev,
       type: "image-msg",

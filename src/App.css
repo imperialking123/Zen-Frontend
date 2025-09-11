@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
-
 @keyframes pulse {
   0% {
     transform: scale(1);
@@ -205,7 +203,7 @@ a {
 
 ::-webkit-scrollbar {
   background: transparent;
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -213,30 +211,66 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #333338;
+  background-color: #797878;
   border-radius: 10px;
 }
 
-progress {
-  width: 100%;
-  height: 5px;
-  border-radius: 10px;
+.emoji {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+  margin: 0 0.05em 0 0.1em; 
+  vertical-align: -0.15em; 
+}
+
+.emoji.big{
+  width: 45px;  
+  height: 45px;
+}
+
+.bar {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3); /* grey background */
+  border-radius: 2px;
+  position: relative;
   overflow: hidden;
-  appearance: none;
 }
 
-progress::-webkit-progress-bar {
-  background-color: #464646;
-  border-radius: 10px;
+/* the filling part */
+.bar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  background: white;
+  animation: none;
 }
 
-progress::-webkit-progress-value {
-  background-color: #e4dbdb; /* green */
-  border-radius: 10px;
+/* currently playing */
+.bar.active::after {
+  animation: fill 3s linear forwards;
+  animation-play-state: running;
 }
 
-/* Firefox */
-progress::-moz-progress-bar {
-  background-color: #4ade80;
-  border-radius: 10px;
+/* paused */
+.bar.active.paused::after {
+  animation-play-state: paused;
+}
+
+/* already viewed */
+.bar.filled::after {
+  width: 100%;
+  background: white;
+}
+
+@keyframes fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
 }

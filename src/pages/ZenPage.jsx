@@ -92,10 +92,6 @@ const ZenPage = () => {
       socketArrangeMessage(data);
     });
 
-    socket.on("newConversation", (data) => {
-      socketNewConversation(data);
-    });
-
     socket.on("newStatus", (data) => socketNewStatus(data));
 
     socket.on("call:incoming", (data) => socketSetIncomingCall(data));
@@ -116,7 +112,7 @@ const ZenPage = () => {
         socket.off("userDisconnect");
         socket.off("redrawReq");
         socket.off("newMessage");
-        socket.off("newConversation");
+
         socket.off("newStatus");
         socket.off("call:incoming");
         socket.off("user-call:reject");
@@ -125,7 +121,6 @@ const ZenPage = () => {
     };
   }, []);
 
-  
   return (
     <Flex draggable={false} direction="column" bg="gray.950" w="100%" h="100vh">
       {/*Title Bar */}

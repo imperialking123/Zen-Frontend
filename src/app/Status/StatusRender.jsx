@@ -1,65 +1,47 @@
 import userPopStore from "@/store/userPopUpStore";
-import { Button, Flex, Image, Portal, Text } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
-import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
-import { RiLoader3Fill } from "react-icons/ri";
+import { Box, Button, Flex, Image, Portal, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { BiChevronLeft } from "react-icons/bi";
 
 const StatusRender = () => {
   const { showRenderStatus, setShowRenderStatus } = userPopStore();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [paused, SetPaused] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [clearView, setClearView] = useState(false);
 
-  const [currentStatus, setCurrentStatus] = useState(0);
-  const [progresses, setProgresses] = useState(showRenderStatus.map(() => 0));
-  const [isLoaded, setIsLoaded] = useState(false);
+  const now = new Date();
+  const allStatus = showRenderStatus.filter(
+    (status) => new Date(status.expiresAt) > now
+  );
 
-  const prevStatus = () => {
-    if (currentStatus === 0) return;
-    setCurrentStatus((prev) => prev - 1);
+  const currentData = allStatus[currentIndex];
+
+  const handleTimerDone = () => {
+    if (currentIndex < allStatus.length - 1) {
+      setLoaded(false);
+      SetPaused(true);
+      setCurrentIndex((prev) => prev + 1); // move to next status
+    } else {
+      setShowRenderStatus(false); // no more statuses, close viewer
+    }
   };
 
-  const nextStatus = () => {
-    if (currentStatus + 1 === showRenderStatus.length) return;
-
-    setProgresses((prev) =>
-      prev.map((_, index) => (index <= currentStatus ? 100 : 0))
-    );
-
-    setCurrentStatus((prev) => prev + 1);
+  const handleHoldDown = () => {
+    SetPaused(true);
+    setClearView(true);
   };
 
-  // useEffect(() => {
-  //   if (!showRenderStatus?.length) return;
+  const handleReleasedHold = () => {
+    SetPaused(false);
+    setClearView(false);
+  };
 
-  //   let animationId;
-  //   const durationMs = 5000;
-  //   const maxValue = 100;
-  //   const startTimeRef = { current: null };
-
-  //   function animate(now) {
-  //     if (!startTimeRef.current) startTimeRef.current = now;
-
-  //     const elapsed = now - startTimeRef.current;
-  //     const progress = Math.min((elapsed / durationMs) * maxValue, maxValue);
-
-  //     setProgresses((prev) =>
-  //       prev.map((value, index) => (index === currentStatus ? progress : value))
-  //     );
-
-  //     if (progress < maxValue) {
-  //       animationId = requestAnimationFrame(animate);
-  //     } else {
-  //       if (currentStatus < showRenderStatus.length - 1) {
-  //         setIsLoaded(false);
-  //         setCurrentStatus((prev) => prev + 1);
-  //       } else {
-  //         setShowRenderStatus(null); // or [] depending on your code
-  //       }
-  //     }
-  //   }
-
-  //   animationId = requestAnimationFrame(animate);
-
-  //   return () => cancelAnimationFrame(animationId);
-  // }, [currentStatus, showRenderStatus]);
+  useEffect(() => {
+    if (allStatus.length < 1) {
+      setShowRenderStatus(false);
+    }
+  }, []);
 
   if (!showRenderStatus?.length) return null;
   return (
@@ -74,102 +56,75 @@ const StatusRender = () => {
         alignItems="center"
         justifyContent="center"
       >
-        <Button bg="none " color="white" pos="absolute" left="0%">
-          <BiChevronLeft className="iconMedium" />
-        </Button>
-        {/* Top progress bars */}
         <Flex
-          w="100%"
+          zIndex={10}
           justifyContent="center"
-          alignItems="center"
           pos="absolute"
-          top="1%"
+          top="0"
+          w="full"
+          opacity={clearView ? 0 : 1}
+          transition="0.3s ease"
         >
-          <Button
-            onClick={() => setShowRenderStatus(null)}
-            bg="none "
-            color="white"
+          <Box
+            onClick={() => setShowRenderStatus(false)}
+            mt="10px"
             pos="absolute"
-            left="0%"
-            mdDown={{ mt: "10px" }}
+            left="5%"
+            mdDown={{ left: "2%" }}
           >
-            <BiChevronLeft className="iconMedium" />
-          </Button>
-          <Flex w="50%" mdDown={{ w: "85%" }} pt="10px">
-            <Flex gap="5px" w="full">
-              {progresses.map((value, index) => (
-                <progress
-                  max={100}
-                  value={value}
-                  key={index}
-                  className="progress"
-                />
-              ))}
-            </Flex>
+            <BiChevronLeft style={{ scale: 2 }} />
+          </Box>
+
+          <Flex mt="15px" w="50%" gap="10px" mdDown={{ w: "80%" }}>
+            {showRenderStatus.map((status, i) => (
+              <div
+                onAnimationEnd={handleTimerDone}
+                key={status._id}
+                className={`bar 
+        ${i < currentIndex ? "filled" : ""} 
+        ${i === currentIndex ? (paused ? "active paused" : "active") : ""}
+      `}
+              />
+            ))}
           </Flex>
         </Flex>
 
-        {/* Left button */}
-        {currentStatus !== 0 && (
-          <Button
-            onClick={prevStatus}
-            pos="absolute"
-            left="0"
-            bg="none"
-            color="white"
-          >
-            <BiChevronLeft style={{ scale: "2" }} />
-          </Button>
-        )}
-
-        {/* Main image */}
-        <Image
-          onLoad={() => setIsLoaded(true)}
-          src={showRenderStatus[currentStatus]?.url}
-          w="50%"
+        <Flex
+          pos="relative"
+          justifyContent="center"
+          alignItems="center"
+          h="full"
           mdDown={{ w: "100%" }}
-          h="100%"
-          objectFit="contain"
-          filter={!isLoaded ? "blur(20px)  " : "none"}
-        />
-
-        {!isLoaded && (
-          <RiLoader3Fill
-            style={{ scale: "3", position: "absolute" }}
-            className="spin"
+          w="50%"
+        >
+          <Image
+            src={currentData.url}
+            onLoad={() => {
+              setLoaded(true);
+              SetPaused(false);
+            }}
+            style={{
+              filter: loaded ? "none" : "blur(10px)", // blurry while loading
+              transition: "filter 0.3s ease-in-out",
+            }}
+            objectFit="contain"
+            onPointerDown={handleHoldDown}
+            onPointerUp={handleReleasedHold}
+            onPointerLeave={handleReleasedHold}
           />
-        )}
-
-        {/* Status text */}
-
-        {showRenderStatus[currentStatus]?.text && (
           <Text
+            mdDown={{ bottom: "35%" }}
+            bottom="25%"
+            rounded="10px"
+            p="5px 10px"
+            bg="#141414ea"
             pos="absolute"
-            bottom="5%"
-            color="white"
-            fontSize="lg"
-            bg="#1b1d1cff"
-            p="8px"
             maxW="95%"
-            rounded="5px"
-            textAlign="center"
+            whiteSpace="pre-wrap"
           >
-            {showRenderStatus[currentStatus]?.text}
+            {currentData.text}
           </Text>
-        )}
-
-        {/* Right button */}
-        {currentStatus + 1 !== showRenderStatus.length && (
-          <Button
-            onClick={nextStatus}
-            pos="absolute"
-            right="0"
-            bg="none"
-            color="white"
-          >
-            <BiChevronRight style={{ scale: "2" }} />
-          </Button>
-        )}
+        </Flex>
       </Flex>
     </Portal>
   );

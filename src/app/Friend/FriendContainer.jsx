@@ -34,6 +34,8 @@ const FriendContainer = () => {
           color="white"
           outline="none"
           border="none"
+          display="none"
+          mdDown={{ display: "flex" }}
         >
           <LuMenu />
         </Button>

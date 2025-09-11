@@ -5,7 +5,6 @@ import { useColorMode } from "./components/ui/color-mode";
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
 import SignupPage from "./pages/SignupPage";
-import WelcomePage from "./pages/WelcomePage";
 import { Toaster } from "sonner";
 import GooglePage from "./pages/GooglePage";
 import LoginPage from "./pages/LoginPage";
@@ -61,7 +60,6 @@ const App = () => {
     <div>
       <Toaster closeButton richColors position="top-center" />
       <Routes>
-    
         <Route
           path="/signup"
           element={authUser ? <Navigate to="/" /> : <SignupPage />}
@@ -76,7 +74,7 @@ const App = () => {
           <Route index element={<FriendContainer />} />
           <Route path="hyperzen" element={<HyperZenContainer />} />
           <Route path="@me/:username" element={<MessengerContainer />} />
-        </Route>  
+        </Route>
 
         {/*Important Route */}
 

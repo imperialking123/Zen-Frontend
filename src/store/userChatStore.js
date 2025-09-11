@@ -104,7 +104,7 @@ const userChatStore = create((set, get) => ({
     } catch {}
   },
 
-  socketArrangeMessage: (message) => {
+  socketArrangeMessage: async (message) => {
     const { convoSelected, messages, conversations } = get();
     const authUser = authUserStore.getState().authUser;
 
@@ -125,7 +125,7 @@ const userChatStore = create((set, get) => ({
 
       const newConversations = conversations.map((convo) => {
         if (convo._id === message.conversationId) {
-          const newUnreadCount = (convo.unreadCounts[authUser._id] || 0) + 1;
+          const newUnreadCount = (convo.unreadCounts?.[authUser._id] || 0) + 1;
           return {
             ...convo,
             unreadCounts: {
@@ -140,9 +140,34 @@ const userChatStore = create((set, get) => ({
 
       set({ conversations: newConversations });
     }
-  },
-  socketNewConversation: (data) => {
-    set({ conversations: [data, ...get().conversations] });
+
+    const findOne = conversations?.some(
+      (p) => p._id === message.conversationId
+    );
+
+    if (!findOne) {
+      try {
+        const res = await axiosInstance.get(
+          `conversations/get/${message.conversationId}`
+        );
+
+        const otherUser = res.data.participants.find(
+          (p) => p._id !== authUser._id
+        );
+
+        const fullConvo = {
+          ...res.data,
+          otherParticipant: otherUser,
+        };
+
+        set({
+          conversations: [
+            ...get().conversations.filter((p) => p._id !== fullConvo._id),
+            fullConvo,
+          ],
+        });
+      } catch {}
+    }
   },
 
   isGettingConvo: false,
@@ -171,8 +196,14 @@ const userChatStore = create((set, get) => ({
     }
   },
 
-  continueDirect: (convo) => {
-    console.log(convo);
+  continueDirect: async (convo) => {
+    try {
+      const res = await axiosInstance.post("/conversations/add", convo);
+      set({ convoSelected: res.data });
+    } catch {
+    } finally {
+      set({ isGettingConvo: false });
+    }
   },
 }));
 

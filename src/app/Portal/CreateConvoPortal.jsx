@@ -1,5 +1,13 @@
 import userFriendStore from "@/store/userFriendStore";
-import { Box, Flex, Heading, HStack, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import { motion as Motion } from "framer-motion";
 
 import { LuX } from "react-icons/lu";
@@ -7,6 +15,7 @@ import replacerImage from "@/assets/default.jpg";
 import userPopStore from "@/store/userPopUpStore";
 import userChatStore from "@/store/userChatStore";
 import { useNavigate } from "react-router-dom";
+import { PiPlusCircle } from "react-icons/pi";
 
 const CreateConvoPortal = () => {
   const { friends, onlineFriends } = userFriendStore();
@@ -29,6 +38,11 @@ const CreateConvoPortal = () => {
       navigate(`@me/${user.username}`);
       continueDirect(response);
     }
+  };
+
+  const handleAddFriend = () => {
+    setShowAddconvo(false);
+    navigate("/");
   };
 
   return (
@@ -152,8 +166,24 @@ const CreateConvoPortal = () => {
         )}
 
         {Array.isArray(friends) && friends.length < 1 && (
-          <Flex w="full" h="full" bg="red">
-            <Text>Add a friend to create a DM </Text>
+          <Flex
+            gap="10px"
+            direction="column"
+            w="full"
+            h="full"
+            alignItems="center"
+            justifyContent="center"
+            color="gray.300"
+          >
+            <Text>Add a friend to Create a DM</Text>
+            <Button
+              onClick={handleAddFriend}
+              color="gray.200"
+              rounded="full"
+              bg="none"
+            >
+              <PiPlusCircle className="iconMedium" />
+            </Button>
           </Flex>
         )}
       </Flex>

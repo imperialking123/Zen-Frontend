@@ -52,8 +52,8 @@ const ConvoItem = ({ convoData, fullConvoData }) => {
           justifyContent="center"
         >
           <Image
-            w="40px"
-            h="40px"
+            w="32px"
+            h="32px"
             rounded="full"
             objectFit="cover"
             src={convoData?.profile?.profilePicsm || replacerImage}
@@ -62,23 +62,23 @@ const ConvoItem = ({ convoData, fullConvoData }) => {
           onlineFriends.length > 0 &&
           onlineFriends.includes(convoData._id) ? (
             <Box
-              pos="absolute"
-              bottom="2%"
-              right="4%"
+              bottom="0"
+              right="0"
               border="3px solid"
               borderColor="gray.900"
-              p="4px"
+              pos="absolute"
+              p="5px"
               rounded="full"
-              bg="#00ff00ff"
+              bg="#4CAF50"
             ></Box>
           ) : (
             <Box
+              bottom="0"
+              right="0"
+              border="3px solid"
+              borderColor="gray.900"
               pos="absolute"
-              bottom="2%"
-              right="4%"
-              border="4px solid"
-              borderColor="gray.700"
-              p="3px"
+              p="5px"
               rounded="full"
               bg="white"
             ></Box>
@@ -92,18 +92,22 @@ const ConvoItem = ({ convoData, fullConvoData }) => {
 
       {fullConvoData.unreadCounts[authUser._id] > 0 && (
         <Box
-          bg="red"
+          bg="#ff1919ff"
           pos="absolute"
-          w="20px"
-          h="20px"
+          w="15px"
+          h="15px"
           display="flex"
           alignItems="center"
           justifyContent="center"
           color="white"
           rounded="full"
           right="7%"
+          p="0px"
         >
-          {fullConvoData.unreadCounts[authUser._id]}
+          <Text fontSize="11px" fontWeight="bold">
+            {" "}
+            {fullConvoData.unreadCounts[authUser._id]}
+          </Text>
         </Box>
       )}
     </Flex>
