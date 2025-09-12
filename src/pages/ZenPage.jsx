@@ -4,6 +4,7 @@ import CallRinger from "@/app/Caller/CallRinger";
 import HangerContainer from "@/app/Hanger/HangerContainer";
 import CreateConvoPortal from "@/app/Portal/CreateConvoPortal";
 import SendRequestPortal from "@/app/Portal/SendRequestPortal";
+import ViewMediaPop from "@/app/Portal/ViewMediaPop";
 import SettingsContainer from "@/app/Settings/SettingsContainer";
 import SideBar from "@/app/SideBar/SideBar";
 import CreateStatus from "@/app/Status/CreateStatus";
@@ -41,16 +42,11 @@ const ZenPage = () => {
     showCallerPop,
     showCreateStatusPoP,
     showRenderStatus,
-    socketSetIncomingCall,
-    incomingCall,
-    socketSetIncomingSenderOffline,
-    socketRejectCall,
-    acceptCall,
+    showMediaPop,
   } = userPopStore();
   const { getAllMyStatus, getFriendsStatus, socketNewStatus } =
     userStatusStore();
-  const { getAllConvo, socketArrangeMessage, socketNewConversation } =
-    userChatStore();
+  const { getAllConvo, socketArrangeMessage } = userChatStore();
 
   useEffect(() => {
     getFriends();
@@ -94,16 +90,6 @@ const ZenPage = () => {
 
     socket.on("newStatus", (data) => socketNewStatus(data));
 
-    socket.on("call:incoming", (data) => socketSetIncomingCall(data));
-
-    socket.on("call:callerOfline", (data) =>
-      socketSetIncomingSenderOffline(data)
-    );
-
-    socket.on("user-call:reject", (d) => {
-      socketRejectCall(d);
-    });
-
     return () => {
       if (socket) {
         socket.off("onlineFriendList");
@@ -112,11 +98,6 @@ const ZenPage = () => {
         socket.off("userDisconnect");
         socket.off("redrawReq");
         socket.off("newMessage");
-
-        socket.off("newStatus");
-        socket.off("call:incoming");
-        socket.off("user-call:reject");
-        socket.off("call:callerOfline");
       }
     };
   }, []);
@@ -181,13 +162,9 @@ const ZenPage = () => {
       {showCallerPop && <CallerContainer />}
       {showCreateStatusPoP && <CreateStatus />}
       {showRenderStatus && <StatusRender />}
-      {Array.isArray(incomingCall) &&
-        incomingCall.length > 0 &&
-        incomingCall.map((callData, index) => (
-          <CallRinger key={index} callerData={callData} />
-        ))}
-
-      {acceptCall && <CallReciever callReceived={acceptCall} />}
+      {showMediaPop && <ViewMediaPop />}
+    
+      
     </Flex>
   );
 };

@@ -58,7 +58,16 @@ const App = () => {
 
   return (
     <div>
-      <Toaster closeButton richColors position="top-center" />
+      <Toaster
+        toastOptions={{
+          style: {
+            borderRadius: "100px",
+            height: "55px"
+          },
+        }}
+        richColors
+        position="top-center"
+      />
       <Routes>
         <Route
           path="/signup"

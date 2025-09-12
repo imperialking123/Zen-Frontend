@@ -101,7 +101,7 @@ const InputBar = ({ data }) => {
       pl="10px"
       pr="10px"
       pt="10px"
-      w="95%"
+      w="98%"
       minH="50px"
       maxH="100%"
       overflowY="auto"

@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useState } from "react";
+import userPopStore from "@/store/userPopUpStore";
 
 dayjs.extend(localizedFormat);
 dayjs.extend(calendar);
@@ -13,6 +14,7 @@ dayjs.extend(calendar);
 const MapImage = ({ data }) => {
   const { authUser } = authUserStore();
   const { convoSelected } = userChatStore();
+  const { setShowMediaPop } = userPopStore();
   const isMe = data.senderId === authUser._id;
 
   const [isHovered, setIsHovered] = useState(false);
@@ -42,7 +44,12 @@ const MapImage = ({ data }) => {
     }
   }
 
-
+  const mediaData = {
+    media: data.image || data.url,
+    type: data.type.split("-")[0],
+    senderProfile: convoSelected.otherParticipant.profile,
+    timeStamp: data.createdAt,
+  };
 
   return (
     <Flex
@@ -96,14 +103,21 @@ const MapImage = ({ data }) => {
             </Text>
           </Flex>
         )}
-        <Text userSelect='none' whiteSpace="pre-wrap" wordBreak="break-word" textAlign="left">
+        <Text
+          userSelect="none"
+          whiteSpace="pre-wrap"
+          wordBreak="break-word"
+          textAlign="left"
+        >
           {data.text}
         </Text>
         <Image
+          onClick={() => setShowMediaPop(mediaData)}
           rounded="15px"
           src={data.image || data.url}
-          maxW='344px'
+          maxW="344px"
           h="350px"
+          cursor='pointer'
         />
       </Flex>
     </Flex>

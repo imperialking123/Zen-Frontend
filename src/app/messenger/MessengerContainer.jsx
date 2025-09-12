@@ -132,7 +132,7 @@ const MessengerContainer = () => {
             </Flex>
 
             <Flex gap="25px" mr="15px">
-              {/* <button
+              <button
                 onClick={() =>
                   setShowCallerPop({
                     tempId: crypto.randomUUID(),
@@ -154,7 +154,7 @@ const MessengerContainer = () => {
 
               <button>
                 <FaVideo className="iconMedium" />
-              </button> */}
+              </button>
 
               <button
                 onClick={toggleRenderDisplayUser}

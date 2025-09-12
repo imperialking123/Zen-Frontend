@@ -21,6 +21,7 @@ const SideBar = () => {
       function: () => {
         selectConvo(null);
         setTopText("Friends");
+        document.title = `Zen | Friends`;
         SetSliderNum(1);
       },
     },
@@ -30,6 +31,7 @@ const SideBar = () => {
       icon: <GiHypersonicMelon className="iconScale" />,
       function: () => {
         selectConvo(null);
+        document.title = "Zen | HyperZen";
       },
     },
   ];

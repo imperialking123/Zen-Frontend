@@ -1,40 +1,66 @@
+import authUserStore from "@/store/authUserStore";
 import userPopStore from "@/store/userPopUpStore";
+import userStatusStore from "@/store/userStatusStore";
 import { Box, Button, Flex, Image, Portal, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { BiChevronLeft } from "react-icons/bi";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 const StatusRender = () => {
   const { showRenderStatus, setShowRenderStatus } = userPopStore();
+  const { setViewedStatus } = userStatusStore();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [paused, SetPaused] = useState(false);
+  const [paused, SetPaused] = useState(true);
   const [loaded, setLoaded] = useState(false);
   const [clearView, setClearView] = useState(false);
+
+  const authUser = authUserStore.getState().authUser;
 
   const now = new Date();
   const allStatus = showRenderStatus.filter(
     (status) => new Date(status.expiresAt) > now
   );
-
   const currentData = allStatus[currentIndex];
+  const isPrevable = currentIndex > 0;
+  const isNextable = currentIndex < allStatus.length - 1;
 
   const handleTimerDone = () => {
     if (currentIndex < allStatus.length - 1) {
       setLoaded(false);
       SetPaused(true);
+
       setCurrentIndex((prev) => prev + 1); // move to next status
     } else {
-      setShowRenderStatus(false); // no more statuses, close viewer
+      setShowRenderStatus(false);
     }
   };
+
+  useEffect(() => {
+    setViewedStatus(currentData.creatorId, currentData._id, authUser._id);
+  }, [currentData]);
 
   const handleHoldDown = () => {
     SetPaused(true);
     setClearView(true);
   };
 
+  console.log(paused);
+
   const handleReleasedHold = () => {
     SetPaused(false);
     setClearView(false);
+  };
+  const handleNext = () => {
+    if (currentIndex < allStatus.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+      setViewedStatus(currentData._id);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setViewedStatus(currentData._id);
+      setCurrentIndex((prev) => prev - 1);
+    }
   };
 
   useEffect(() => {
@@ -42,6 +68,16 @@ const StatusRender = () => {
       setShowRenderStatus(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (!allStatus.length) return;
+
+    const firstUnviewedIndex = allStatus.findIndex(
+      (s) => !s.viewers.includes(authUser._id)
+    );
+
+    setCurrentIndex(firstUnviewedIndex === -1 ? 0 : firstUnviewedIndex);
+  }, [authUser._id]);
 
   if (!showRenderStatus?.length) return null;
   return (
@@ -96,6 +132,10 @@ const StatusRender = () => {
           h="full"
           mdDown={{ w: "100%" }}
           w="50%"
+          onPointerDown={handleHoldDown}
+          onPointerUp={handleReleasedHold}
+          onPointerLeave={handleReleasedHold}
+          minH="50%"
         >
           <Image
             src={currentData.url}
@@ -108,23 +148,72 @@ const StatusRender = () => {
               transition: "filter 0.3s ease-in-out",
             }}
             objectFit="contain"
-            onPointerDown={handleHoldDown}
-            onPointerUp={handleReleasedHold}
-            onPointerLeave={handleReleasedHold}
           />
-          <Text
-            mdDown={{ bottom: "35%" }}
-            bottom="25%"
-            rounded="10px"
-            p="5px 10px"
-            bg="#141414ea"
-            pos="absolute"
-            maxW="95%"
-            whiteSpace="pre-wrap"
-          >
-            {currentData.text}
-          </Text>
+          {currentData.text && (
+            <Text
+              mdDown={{ bottom: "35%" }}
+              bottom="25%"
+              rounded="10px"
+              p="5px 10px"
+              bg="#141414ea"
+              pos="absolute"
+              maxW="95%"
+              whiteSpace="pre-wrap"
+            >
+              {currentData.text}
+            </Text>
+          )}
         </Flex>
+
+        {/*Clicker for Prev */}
+        {isPrevable && (
+          <Flex
+            justifyContent="center"
+            alignItems="center"
+            left="0"
+            minH="100%"
+            pos="absolute"
+            w="10%"
+            onClick={handlePrev}
+          >
+            <Button
+              bg="none"
+              color="white"
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePrev();
+              }}
+              mdDown={{ display: "none" }}
+            >
+              <BiChevronLeft style={{ scale: "1.5" }} />
+            </Button>
+          </Flex>
+        )}
+
+        {/*Clicker for next */}
+        {isNextable && (
+          <Flex
+            onClick={handleNext}
+            justifyContent="center"
+            alignItems="center"
+            right="0"
+            minH="100%"
+            pos="absolute"
+            w="10%"
+          >
+            <Button
+              bg="none"
+              color="white"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNext();
+              }}
+              mdDown={{ display: "none" }}
+            >
+              <BiChevronRight style={{ scale: "1.5" }} />
+            </Button>
+          </Flex>
+        )}
       </Flex>
     </Portal>
   );

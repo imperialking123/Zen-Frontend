@@ -2,6 +2,7 @@ import axiosInstance from "@/config/AxiosInstance";
 import { create } from "zustand";
 import userPopStore from "./userPopUpStore";
 import userFriendStore from "./userFriendStore";
+import authUserStore from "./authUserStore";
 
 const userStatusStore = create((set, get) => ({
   MyStatus: [],
@@ -62,6 +63,26 @@ const userStatusStore = create((set, get) => ({
       };
 
       set({ FriendStatus: [...FriendStatus, newFriendStatus] });
+    }
+  },
+
+  setViewedStatus: (creatorId, statusId, myself) => {
+    if (myself === creatorId) return;
+    const statuses = get().FriendStatus;
+
+    const particularFriend = statuses.find((p) => p.friend._id === creatorId);
+    if (!particularFriend) return;
+
+    const targetStatus = particularFriend.allStatus.find(
+      (s) => s._id === statusId
+    );
+    if (!targetStatus) return;
+
+    if (!targetStatus.viewers.includes(myself)) {
+      targetStatus.viewers.push(myself);
+      const socket = authUserStore.getState().socket;
+      if (!socket) return;
+      socket.emit("viewedStatus", { creatorId, statusId, myself });
     }
   },
 }));

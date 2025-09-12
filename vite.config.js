@@ -5,9 +5,9 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
   server: {
-    historyApiFallback: true, // 👈 ensures dev server behaves like Vercel
+    historyApiFallback: true,
   },
   build: {
-    outDir: 'dist', // 👈 make sure this matches what Vercel expects
+    outDir: 'dist',
   },
 })

@@ -21,6 +21,7 @@ const ConvoItem = ({ convoData, fullConvoData }) => {
     SetSliderNum(2);
     setTopText("Direct Messages");
     selectConvo(fullConvoData);
+    document.title = `Zen | @${convoData.username}`;
     navigate(`@me/${convoData.username}`);
   };
 

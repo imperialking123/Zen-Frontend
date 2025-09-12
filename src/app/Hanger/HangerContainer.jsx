@@ -18,13 +18,11 @@ const HangerContainer = () => {
 
   const inputRef = useRef(null);
 
-  
   const n = MyStatus.length;
   const r = 24;
   const circumference = 2 * Math.PI * r;
   const gap = 7;
   const dash = circumference / n - gap;
-
   const dashArray = `${dash} ${gap}`;
 
   const handleUploader = async (event) => {
@@ -93,7 +91,7 @@ const HangerContainer = () => {
                   fill="transparent"
                   strokeWidth="3"
                   strokeLinecap="round"
-                  strokeDasharray={dashArray}
+                  strokeDasharray={MyStatus.length > 1 ? dashArray : ""}
                 />
               </svg>
             )}
