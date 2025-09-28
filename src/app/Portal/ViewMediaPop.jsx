@@ -9,8 +9,6 @@ import { LuX } from "react-icons/lu";
 const ViewMediaPop = () => {
   const { showMediaPop, setShowMediaPop } = userPopStore();
 
-  
-
   const handleDownload = async () => {
     const res = await fetch(showMediaPop.media);
     const blob = await res.blob();
@@ -52,7 +50,6 @@ const ViewMediaPop = () => {
             inset: 0,
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 9999,
           }}
         >
           <Flex
@@ -61,6 +58,7 @@ const ViewMediaPop = () => {
             pos="absolute"
             w="full"
             h="55px"
+            zIndex={10}
             mdDown={{
               top: "1%",
             }}
@@ -76,7 +74,7 @@ const ViewMediaPop = () => {
               rounded="15px"
             >
               <Tooltip
-                contentProps={{ css: { padding: "5px" } }}
+                contentProps={{ css: { padding: "5px", zIndex: "10" } }}
                 openDelay={300}
                 closeDelay={200}
                 content="Save Media"

@@ -43,7 +43,7 @@ const StatusRender = () => {
     setClearView(true);
   };
 
-  console.log(paused);
+  
 
   const handleReleasedHold = () => {
     SetPaused(false);

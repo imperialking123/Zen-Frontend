@@ -45,6 +45,7 @@ const MapText = ({ data }) => {
 
   return (
     <Flex
+      transition="1.2s ease"
       mt={data.showAvatar === true ? "8px" : "0px"}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -94,9 +95,7 @@ const MapText = ({ data }) => {
             </Text>
           </Flex>
         )}
-        <RenderTextEmoji fontSize="16px" >
-          {data.text}
-        </RenderTextEmoji>
+        <RenderTextEmoji fontSize="16px">{data.text}</RenderTextEmoji>
       </Flex>
     </Flex>
   );

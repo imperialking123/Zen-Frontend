@@ -1,6 +1,7 @@
-import mp3 from "@/assets/notify.mp3";
+import notifySound from "@/assets/notify.mp3";
 export const notify = () => {
-  const audio = new Audio(mp3);
+  const audio = new Audio(notifySound);
+  audio.autoplay = false;
   audio.play();
 };
 

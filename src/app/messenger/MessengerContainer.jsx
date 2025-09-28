@@ -12,15 +12,22 @@ import InputBar from "./InputBar";
 import userPopStore from "@/store/userPopUpStore";
 import { LuMenu } from "react-icons/lu";
 import authUserStore from "@/store/authUserStore";
+import userCallStore from "@/store/userCallStore";
+import CallerContainer from "../Caller/CallerContainer";
+import CallReceiverContainer from "../Caller/CallReceiverContainer";
 const MessengerContainer = () => {
-  const { convoSelected, getMessages } = userChatStore();
+  const {
+    convoSelected,
+    getMessages,
+    renderDisplayUser,
+    setRenderDisplayUser,
+  } = userChatStore();
   const { onlineFriends } = userFriendStore();
-  const { SliderNum, SetSliderNum, setTopText, setShowCallerPop } =
-    userPopStore();
+  const { SliderNum, SetSliderNum, setTopText } = userPopStore();
+  const { setOutgoingCall } = userCallStore();
   const { authUser } = authUserStore();
+  const { outGoingCall, acceptedCall } = userCallStore();
   const navigate = useNavigate();
-
-  const [renderDisplayUser, setRenderDisplayUser] = useState(true);
 
   const toggleRenderDisplayUser = () => {
     renderDisplayUser === true
@@ -43,7 +50,7 @@ const MessengerContainer = () => {
   }, [convoSelected]);
 
   return (
-    <Flex direction="column" w="100%" h="100%">
+    <Flex pos="relative" direction="column" w="100%" h="100%">
       {/*Top ribbon */}
       <Flex
         userSelect="none"
@@ -102,24 +109,25 @@ const MessengerContainer = () => {
                 />
                 {Array.isArray(onlineFriends) &&
                 onlineFriends.length > 0 &&
-                onlineFriends.includes(convoSelected.otherParticipant?._id) ? (
+                onlineFriends.includes(convoSelected?.otherParticipant?._id) ? (
                   <Box
+                    bottom="3%"
+                    right="3%"
+                    border="3px solid"
+                    borderColor="gray.900"
                     pos="absolute"
-                    bottom="15%"
-                    right="4%"
                     p="5px"
-                    borderColor="gray.400"
                     rounded="full"
-                    bg="#00ff00ff"
+                    bg="#4CAF50"
                   ></Box>
                 ) : (
                   <Box
-                    pos="absolute"
-                    bottom="15%"
-                    right="4%"
+                    bottom="3%"
+                    right="3%"
                     border="3px solid"
-                    borderColor="gray.400"
-                    p="3px"
+                    borderColor="gray.800"
+                    pos="absolute"
+                    p="5px"
                     rounded="full"
                     bg="white"
                   ></Box>
@@ -133,8 +141,9 @@ const MessengerContainer = () => {
 
             <Flex gap="25px" mr="15px">
               <button
-                onClick={() =>
-                  setShowCallerPop({
+                onClick={() => {
+                  setRenderDisplayUser(null);
+                  setOutgoingCall({
                     tempId: crypto.randomUUID(),
                     receiver: convoSelected.otherParticipant,
                     sender: {
@@ -143,16 +152,34 @@ const MessengerContainer = () => {
                     },
                     video: false,
                     audio: true,
-                    callType: "Audio-Call",
+                    callType: "Audio Call",
                     type: "call",
                     conversationId: convoSelected._id,
-                  })
-                }
+                  });
+                }}
               >
                 <BiSolidPhoneCall className="iconMedium" />
               </button>
 
-              <button>
+              <button
+                onClick={() => {
+                  setRenderDisplayUser(null);
+                  setOutgoingCall({
+                    tempId: crypto.randomUUID(),
+                    receiver: convoSelected.otherParticipant,
+                    sender: {
+                      _id: authUser._id,
+                      profile: authUser?.profile,
+                    },
+                    video: true,
+                    audio: true,
+                    isVideo: true,
+                    callType: "Video Call",
+                    type: "call",
+                    conversationId: convoSelected._id,
+                  });
+                }}
+              >
                 <FaVideo className="iconMedium" />
               </button>
 
@@ -215,6 +242,9 @@ const MessengerContainer = () => {
           </Flex>
         )}
       </Flex>
+
+      {outGoingCall && <CallerContainer />}
+      {acceptedCall && <CallReceiverContainer />}
     </Flex>
   );
 };

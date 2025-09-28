@@ -19,9 +19,6 @@ const userPopStore = create((set, get) => ({
   showSettings: false,
   setShowSettings: (d) => set({ showSettings: d }),
 
-  showCallerPop: false,
-  setShowCallerPop: (d) => set({ showCallerPop: d }),
-
   showCreateStatusPoP: false,
   setShowCreateStatusPop: (d) => set({ showCreateStatusPoP: d }),
 

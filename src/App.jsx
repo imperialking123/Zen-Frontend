@@ -62,9 +62,11 @@ const App = () => {
         toastOptions={{
           style: {
             borderRadius: "100px",
-            height: "55px"
+            height: "55px",
+            userSelect: "none"
           },
         }}
+        
         richColors
         position="top-center"
       />

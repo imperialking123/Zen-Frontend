@@ -12,13 +12,14 @@ import userPopStore from "@/store/userPopUpStore";
 const ConvoItem = ({ convoData, fullConvoData }) => {
   const { onlineFriends } = userFriendStore();
   const [isHovered, setIsHovered] = useState(false);
-  const { selectConvo, convoSelected } = userChatStore();
+  const { selectConvo, convoSelected, setRenderDisplayUser } = userChatStore();
   const { authUser } = authUserStore();
   const { SetSliderNum, setTopText } = userPopStore();
 
   const navigate = useNavigate();
   const handleClick = () => {
     SetSliderNum(2);
+    setRenderDisplayUser(fullConvoData);
     setTopText("Direct Messages");
     selectConvo(fullConvoData);
     document.title = `Zen | @${convoData.username}`;

@@ -205,6 +205,9 @@ const userChatStore = create((set, get) => ({
       set({ isGettingConvo: false });
     }
   },
+
+  renderDisplayUser: null,
+  setRenderDisplayUser: (d) => set({ renderDisplayUser: d }),
 }));
 
 export default userChatStore;
